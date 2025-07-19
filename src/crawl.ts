@@ -28,10 +28,32 @@ export async function getHTML(url: string) {
     throw new Error(`Got network error: ${(error as Error).message}`);
   }
   if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}`);
-  }
+    console.log(`Response from ${url} was not OK`);
+    return;
+  };
   if (!response.headers.get('content-type')?.includes('text/html')) {
-    throw new Error(`Response from ${url} is not HTML`);
+    console.log(`Response from ${url} was not HTML`);
+    return;
   }
-  console.log(await response.text());
+  const res = await response.text();
+  return res;
+}
+
+export async function crawlPage(baseURL: string, currentURL: string, pages: Record<string, number> = {}) {
+  console.log(`Crawling page: ${currentURL}`);
+
+  if (!currentURL.startsWith(baseURL)) return pages;
+  const normURL = normalizeURL(currentURL);
+  if (pages[normURL]) {
+    pages[normURL]++;
+    return pages;
+  }
+  pages[normURL] = 1;
+  const html = await getHTML(currentURL);
+  if (!html) return pages;
+  const urls = getURLsFromHTML(html, baseURL);
+  for (const url of urls) {
+    await crawlPage(baseURL, url, pages);
+  }
+  return pages;
 }

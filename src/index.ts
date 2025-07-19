@@ -1,5 +1,6 @@
 import { crawlSiteAsync } from "./crawl";
 import { argv } from "node:process";
+import { printReport } from "./report";
 
 async function main() {
   if (argv.length < 3) {
@@ -14,7 +15,7 @@ async function main() {
   console.log(`Crawling ${url}`);
   const result = await crawlSiteAsync(url);
   console.log('Done crawling');
-  console.log(result);
+  printReport(url, result);
   process.exit(0);
 }
 

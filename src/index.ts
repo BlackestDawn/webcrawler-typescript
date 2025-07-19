@@ -1,7 +1,7 @@
-import { getURLsFromHTML } from "./crawl";
+import { getHTML } from "./crawl";
 import { argv } from "node:process";
 
-function main() {
+async function main() {
   if (argv.length < 3) {
     console.error('Need to provide a URL to crawl');
     process.exit(1);
@@ -12,6 +12,7 @@ function main() {
   }
   const url = argv[2];
   console.log(`Crawling ${url}`);
+  await getHTML(url);
   process.exit(0);
 }
 

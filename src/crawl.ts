@@ -19,3 +19,19 @@ export function getURLsFromHTML(html: string, baseURL: string): string[] {
   }
   return urls;
 }
+
+export async function getHTML(url: string) {
+  let response;
+  try {
+    response = await fetch(url);
+  } catch (error) {
+    throw new Error(`Got network error: ${(error as Error).message}`);
+  }
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url}`);
+  }
+  if (!response.headers.get('content-type')?.includes('text/html')) {
+    throw new Error(`Response from ${url} is not HTML`);
+  }
+  console.log(await response.text());
+}

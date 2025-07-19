@@ -1,4 +1,4 @@
-import { crawlPage } from "./crawl";
+import { crawlSiteAsync } from "./crawl";
 import { argv } from "node:process";
 
 async function main() {
@@ -12,7 +12,8 @@ async function main() {
   }
   const url = argv[2];
   console.log(`Crawling ${url}`);
-  const result = await crawlPage(url, url);
+  const result = await crawlSiteAsync(url);
+  console.log('Done crawling');
   console.log(result);
   process.exit(0);
 }
